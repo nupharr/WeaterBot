@@ -1,11 +1,12 @@
 from aiogram import Router
-from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
-from src.text import start_handler
-from src.database import check_user_exists, append_user, get_location
-from src.responces import get_weater
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram.types import Message
+
+from src.database import append_user, check_user_exists, get_location
+from src.responces import get_weater
+from src.text import start_handler
 
 router = Router()
 

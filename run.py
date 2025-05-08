@@ -1,12 +1,11 @@
 import asyncio
-import logging
-import sys
 from os import getenv
 
 from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
-from src.handlers import router
+
 from src.database import create_db
+from src.handlers import router
 
 load_dotenv()
 TOKEN = getenv("BOT_TOKEN")
@@ -23,5 +22,4 @@ async def main() -> None:
 
 if __name__ == "__main__":
     create_db()
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     asyncio.run(main())

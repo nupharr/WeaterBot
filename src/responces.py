@@ -1,7 +1,8 @@
-import requests
 import os
+from datetime import datetime
+
+import requests
 from dotenv import load_dotenv
-from datetime import date, datetime
 
 load_dotenv()
 WEATHER_TOKEN = os.getenv("WEATER_TOKEN")

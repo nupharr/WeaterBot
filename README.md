@@ -1,2 +1,9 @@
 # WeaterBot
-This bot recommends what clothes to wear based on the weather
+
+This telegram bot shows the weather in the city you selected
+
+After cloning the repository, open .env and enter the token from BotFather and the api key from the OpenWeather service
+
+"""ssh
+python ./run.py
+"""
