@@ -4,27 +4,43 @@ from aiogram.filters import Command, CommandStart
 from src.text import start_handler
 from src.database import check_user_exists, append_user, get_location
 from src.responces import get_weater
+from aiogram.fsm.state import StatesGroup, State
+from aiogram.fsm.context import FSMContext
 
 router = Router()
 
 
+class Reg(StatesGroup):
+    city = State()
+
+
 @router.message(CommandStart())
-async def command_start_handler(message: Message):
+async def command_start_handler(message: Message, state: FSMContext):
     if check_user_exists(message.from_user.id):
         await message.answer(
-            f"Добро пожаловать {message.from_user.full_name}!\nВаше местоположение - {get_location(message.from_user.id)["name"]}"
+            f"Добро пожаловать {message.from_user.full_name}!\nВаше местоположение - {get_location(message.from_user.id)["name"]}\nВоспользуйтесь командой /weather"
         )
     else:
+        await state.set_state(Reg.city)
         await message.answer(start_handler)
-        append_user(message.from_user.id, "Орел")
 
 
-@router.message(Command("weater"))
+@router.message(Reg.city)
+async def reg_city(message: Message, state: FSMContext):
+    await state.update_data(city=message.text)
+    data = await state.get_data()
+    append_user(message.from_user.id, data["city"])
+    await state.clear()
+    await message.answer(
+        "Отлично! Город успешно добавлен.\nВоспользуйтесь командой /weather"
+    )
+
+
+@router.message(Command("weather"))
 async def command_help_handler(message: Message):
     await message.answer(
-        f"{
         get_weater(
-            '52.96',
-            '36.06',
-        )}"
+            get_location(message.from_user.id)["lat"],
+            get_location(message.from_user.id)["lon"],
+        )
     )

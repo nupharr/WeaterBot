@@ -1,9 +1,15 @@
 import requests
+import os
+from dotenv import load_dotenv
+from datetime import date, datetime
+
+load_dotenv()
+WEATHER_TOKEN = os.getenv("WEATER_TOKEN")
 
 
 def check_geo(location: str) -> dict | bool:
     responce = requests.get(
-        f"http://api.openweathermap.org/geo/1.0/direct?q={location}&limit=1&appid=382d34fa699d7ad930838475e03efc70"
+        f"http://api.openweathermap.org/geo/1.0/direct?q={location}&limit=1&appid={WEATHER_TOKEN}"
     )
     if responce.ok:
         data = responce.json()
@@ -17,9 +23,28 @@ def check_geo(location: str) -> dict | bool:
 
 def get_weater(lat: str, lon: str):
     responce = requests.get(
-        f"https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude=current&lang=ru&appid=382d34fa699d7ad930838475e03efc70"
+        f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&lang=ru&units=metric&appid={WEATHER_TOKEN}"
     )
     if responce.ok:
         data = responce.json()
-        return data
-    return None
+
+        city = data["name"]
+        cur_weater = data["main"]["temp"]
+        humidity = data["main"]["humidity"]
+        pressure = data["main"]["pressure"]
+        wind = data["wind"]["speed"]
+        sunrise_timestamp = datetime.fromtimestamp(data["sys"]["sunrise"])
+        sunset_timestamp = datetime.fromtimestamp(data["sys"]["sunset"])
+        length_of_the_day = datetime.fromtimestamp(
+            data["sys"]["sunset"]
+        ) - datetime.fromtimestamp(data["sys"]["sunrise"])
+
+        return f"""***{datetime.now().strftime("%Y-%m-%d %H:%M")}***
+Погода в городе: {city}
+Температура: {cur_weater}°C
+Влажность: {humidity}%
+Давление: {pressure} мм.рт.ст
+Ветер: {wind} м/с
+Восход солнца: {sunrise_timestamp}
+Закат солнца: {sunset_timestamp}
+Продолжительность дня: {length_of_the_day}"""

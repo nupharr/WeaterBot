@@ -1,6 +1,5 @@
 import sqlite3
 
-from aiogram.types import location
 from src.responces import check_geo
 
 
@@ -38,8 +37,15 @@ def append_user(id: str, location: str):
             """,
                 (id, result["ru_name"], result["lat"], result["lon"]),
             )
-    else:
-        return False
+        return True
+    return False
+
+
+def delete_user(id: str):
+    with sqlite3.connect("database.db") as db:
+        cursor = db.cursor()
+
+        cursor.execute("DELETE FROM users WHERE id = ?", (id,))
 
 
 def get_location(id: str):
