@@ -5,8 +5,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 
 from src.database import append_user, check_user_exists, get_location, delete_user
-from src.responces import get_weater
-from src.text import start_handler
+from src.responces import get_weather
 
 router = Router()
 
@@ -42,7 +41,7 @@ async def reg_city(message: Message, state: FSMContext):
 @router.message(Command("weather"))
 async def command_help_handler(message: Message):
     await message.answer(
-        get_weater(
+        get_weather(
             get_location(message.from_user.id)["lat"],
             get_location(message.from_user.id)["lon"],
         )

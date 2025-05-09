@@ -22,7 +22,7 @@ def check_geo(location: str) -> dict | bool:
     return False
 
 
-def get_weater(lat: str, lon: str):
+def get_weather(lat: str, lon: str):
     responce = requests.get(
         f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&lang=ru&units=metric&appid={WEATHER_TOKEN}"
     )
