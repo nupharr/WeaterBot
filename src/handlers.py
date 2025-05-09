@@ -23,7 +23,9 @@ async def command_start_handler(message: Message, state: FSMContext):
         )
     else:
         await state.set_state(Reg.city)
-        await message.answer(start_handler)
+        await message.answer(
+            "Привет!\nДля начала я должен узнать твоё местоположение.\nНапиши название своего города."
+        )
 
 
 @router.message(Reg.city)
